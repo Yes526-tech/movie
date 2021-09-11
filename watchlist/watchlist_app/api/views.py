@@ -8,8 +8,8 @@ from watchlist_app.api.serializers import WatchListSerializer, StreamPlatformSer
 class StreamPlatformAV(APIView):
 
     def get(self, request):
-        platform = StreamPlatform.objects.all()
-        serializer = StreamPlatformSerializer(platform, many=True)
+        platforms = StreamPlatform.objects.all()
+        serializer = StreamPlatformSerializer(platforms, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -20,6 +20,33 @@ class StreamPlatformAV(APIView):
         else:
             return Response(serializer.errors)
 
+
+class StreamPlatformDetailAV(APIView):
+
+    def get(self, request, pk):
+        try:
+            platform = StreamPlatform.objects.get(pk=pk)
+        except StreamPlatform.DoesNotExist:
+            return Response({'error': 'Stream platform not found!'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = StreamPlatformSerializer(platform)
+        return Response(serializer.data)
+
+    def put(self, request, pk):
+
+        platform = StreamPlatform.objects.get(pk=pk)
+        # To update an item we have to pass the movie object into the serializers
+        serializer = StreamPlatformSerializer(platform, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        platform = StreamPlatform.objects.get(pk=pk)
+        # we dont need serializers to delete
+        platform.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class WatchListAV(APIView):
 
