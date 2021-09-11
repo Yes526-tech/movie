@@ -3,6 +3,9 @@ from watchlist_app.models import Movie
 
 
 class MovieSerializer(serializers.ModelSerializer):
+
+    # Below we defined a method with get and field name. custom name
+    len_name = serializers.SerializerMethodField()
     # default serializers need update and create mthods
     # but the model serialziers has its own methods
     class Meta:
@@ -28,6 +31,9 @@ class MovieSerializer(serializers.ModelSerializer):
                 "Name and Description should be different!")
         else:
             return data
+
+    def get_len_name(self, object):
+        return len(object.name)
 
 
 # Validate by validators
