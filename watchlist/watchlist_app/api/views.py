@@ -9,8 +9,14 @@ from watchlist_app.api.serializers import (WatchListSerializer,
 
 class ReviewList( generics.ListCreateAPIView):
 
-    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+    # we are overwriting the default queryset
+    def get_queryset(self):
+        # all the arguments are in the kwargs
+        pk = self.kwargs['pk']
+        # From the Review objects we filter the watchlist equals pk
+        return Review.objects.filter(watchlist=pk)
 
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 
