@@ -31,8 +31,9 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
 
 
-class StreamPlatformVS(viewsets.ModelViewSet):
+class StreamPlatformVS(viewsets.ReadOnlyModelViewSet):
 
+    # only list and retreive available 
     serializer_class = StreamPlatformSerializer
     queryset = StreamPlatform.objects.all()
 
@@ -44,7 +45,7 @@ class StreamPlatformAV(APIView):
     def get(self, request):
         platforms = StreamPlatform.objects.all()
         serializer = StreamPlatformSerializer(platforms, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data) 
 
     def post(self, request):
         serializer = StreamPlatformSerializer(data=request.data)
